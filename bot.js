@@ -1,32 +1,20 @@
-require("dotenv").config();
-
+const dotenv = require("dotenv");
 const { Client, Intents } = require("discord.js");
 
-const BOT_PREFIX = "!";
-const COOL_ROLE_ME = "cool-role-me";
+const YA_ID = "368078678866788353";
+const MAXIM_BRO_ID = "281378098627477504";
+
+dotenv.config();
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
   partials: ["MESSAGE"],
 });
 
-client.on("ready", () => console.log("Bot is ready and running"));
+client.once("ready", () => console.log("Bot is ready and running"));
 
-client.on("message", (msg) => {
-  if (msg.content.toLowerCase().includes("дот")) {
-    msg.react("💩");
-  }
-  if (msg.content === `${BOT_PREFIX}${COOL_ROLE_ME}`) {
-    modeUser(msg.member);
-  }
-});
+const commandHandler = require("./commands");
 
-client.on("messageDelete", (msg) => {
-  msg.channel.send(`Хватит блять удалять сообщения, удалил: ${msg.createdAt}`);
-});
-
-function modeUser(member) {
-  member.roles.add("971455553375195197");
-}
+client.on("messageCreate", commandHandler);
 
 client.login(process.env.BOT_TOKEN);
